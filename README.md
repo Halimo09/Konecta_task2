@@ -41,10 +41,12 @@ Frontend Machine - NGINX Setup
 ```bash
 ansible-playbook -i inventory.ini frontend.yml
 ```
+![Frontend Excution](https://github.com/user-attachments/assets/b3d22582-de80-467e-addc-94d77ded50e0)
 
 Docker Machine - Docker + Redis Setup
 ```bash
 ansible-playbook -i inventory.ini docker.yml
 ```
+![Docker Excution](https://github.com/user-attachments/assets/df790058-aac5-4803-a3bc-a278152a4057)
 
 
