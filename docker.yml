@@ -1,0 +1,54 @@
+---
+- name: Setup Docker and Redis
+  hosts: docker
+  become: yes
+  tasks:
+
+    - name: Install prerequisite packages
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
+        update_cache: yes
+
+    - name: Add Docker GPG key
+      shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+      args:
+        warn: false
+
+    - name: Add Docker APT repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+        state: present
+
+    - name: Install Docker
+      apt:
+        name: docker-ce
+        state: latest
+        update_cache: yes
+
+    - name: Start Docker
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Run Redis container
+      community.docker.docker_container:
+        name: redis
+        image: redis
+        state: started
+        restart_policy: always
+        ports:
+          - "6379:6379"
+
+    - name: Show running containers
+      shell: docker ps
+      register: docker_output
+
+    - name: Show container list
+      debug:
+        var: docker_output.stdout_lines
